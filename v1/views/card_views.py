@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from datetime import datetime
 from ..services.card_service import CardService
-from ..serializers import CardSerializer
+from ..serializers.card_serializer import CardSerializer
 from ..models.card_model import Card
 from ..models.color_model import Color
 

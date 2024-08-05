@@ -1,11 +1,9 @@
 from django.db import models
 from ..models.color_model import Color
-from ..models.deck_model import Deck
 
 class Card(models.Model):
     name = models.CharField(max_length=255)
     colors = models.ManyToManyField(Color, through='CardColor')
-    deck = models.ForeignKey(Deck, on_delete=models.CASCADE)
 
     mana_cost = models.CharField(max_length=50)
     cmc = models.IntegerField(default=0)
