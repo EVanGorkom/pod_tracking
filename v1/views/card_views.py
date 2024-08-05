@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from datetime import datetime
 from ..services.card_service import CardService
 from ..serializers import CardSerializer
 from ..models.card_model import Card
@@ -33,7 +34,9 @@ def create_card(request):
         rarity=data.get('rarity'),
         cmdr_legal=data.get('legalities').get('commander'),
         img=data.get('image_uris').get('normal'),
-        purchase_uris=data.get('purchase_uris').get('tcgplayer')
+        purchase_uris=data.get('purchase_uris').get('tcgplayer'),
+        created_at=datetime.now(),
+        updated_at=datetime.now()
       )
 
       if len(data.get('colors_identity')) == 0:
