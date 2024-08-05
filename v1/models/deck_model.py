@@ -4,14 +4,15 @@ from django.dispatch import receiver
 from ..models.card_model import Card
 from ..models.user_model import User
 from ..enums.deck_type_enum import DeckType
+from ..enums.tcg_type_enum import TcgType
 
 class Deck(models.Model):
-    name = models.CharField(max_length=150, required=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    deck_leader = models.ForeignKey(Card, on_delete=models.SET_NULL, null=True, required=False)
-
-    tcg = models.CharField(max_length=50, required=True)
-    deck_type = models.CharField(max_length=50, required=True, choices=DeckType.choices())
+    name = models.CharField(max_length=150, null=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
+    deck_leader = models.ForeignKey(Card, on_delete=models.SET_NULL, null=True)
+    # this deck_leader attr isn't quite working yet...
+    tcg = models.CharField(max_length=50, null=False, choice=TcgType.choices())
+    deck_type = models.CharField(max_length=50, null=True, choices=DeckType.choices())
     colors = models.CharField(max_length=100, default='', blank=True)
     photo = models.URLField(null=True, blank=True)
     wins = models.IntegerField(default=0)

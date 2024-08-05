@@ -8,5 +8,6 @@ class Color(Enum):
     G = 'Green'
     C = 'Colorless'
 
+    @classmethod
     def choices(cls):
         return [(key.value, key.name) for key in cls]

@@ -6,6 +6,7 @@ class DeckType(Enum):
     MODERN = 'modern'
     PIONEER = 'pioneer'
 
+    @classmethod
     def choices(cls):
         return [(key.value, key.name) for key in cls]
 
