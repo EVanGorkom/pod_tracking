@@ -17,10 +17,17 @@ Including another URLconf
 
 from django.urls import path
 from django.conf import settings
-from .views import card_views
+from .views import player_views, deck_views, card_views
 from rest_framework.urlpatterns import format_suffix_patterns
 
 urlpatterns = [
-    path('player/<int:player_id>/deck/<int:deck_id>/create_card/', card_views.create_card)
+    # player
+    path('players/', player_views.player_list),
+    path('players/<int:player_id>/', player_views.player_details),
+    # player deck
+    path('players/<int:player_id>/decks', deck_views.deck_list),
+    path('players/<int:player_id>/decks/<int:deck_id>/', deck_views.deck_details),
+    # deck leaders
+    path('players/<int:player_id>/decks/<int:deck_id>/create_card/', card_views.create_card)
 ]
 
