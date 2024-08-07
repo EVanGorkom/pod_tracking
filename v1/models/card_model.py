@@ -1,14 +1,13 @@
 from django.db import models
-from ..models.color_model import Color
+from ..enums.color_enum import MtgColor
 
 class Card(models.Model):
     name = models.CharField(max_length=255)
-    colors = models.ManyToManyField(Color, through='CardColor')
 
-    mana_cost = models.CharField(max_length=50)
     cmc = models.IntegerField(default=0)
+    mana_cost = models.CharField(max_length=50)
+    colors = models.CharField(max_length=255, blank=True, null=True)
     type_line = models.CharField(max_length=255)
-    # set = models.CharField(max_length=255)
     rarity = models.CharField(max_length=50)
     cmdr_legal = models.CharField(max_length=50)
     img = models.URLField()
@@ -19,3 +18,9 @@ class Card(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def set_colors(self, color_list): 
+        self.colors = ','.join([color.name for color in color_list])
+
+    def get_colors(self):
+        return [MtgColor[color] for color in self.colors.split(',') if color]
