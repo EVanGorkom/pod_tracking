@@ -28,6 +28,6 @@ urlpatterns = [
     path('users/<int:user_id>/decks', deck_views.deck_list),
     path('users/<int:user_id>/decks/<int:deck_id>/', deck_views.deck_details),
     # deck leaders (card)
-    path('users/<int:user_id>/decks/<int:deck_id>/create_card/', card_views.create_card)
+    path('users/<int:user_id>/decks/<int:deck_id>/create_card/', card_views.create_mtg_card)
 ]
 

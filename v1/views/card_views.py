@@ -2,55 +2,49 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from datetime import datetime
-from ..services.card_service import CardService
+from v1.utils import process_colors
 from ..serializers.card_serializer import CardSerializer
-from ..models.card_model import Card
-from ..models.color_model import Color
+from ..enums.color_enum import MtgColor
+from ..models.deck_model import Deck
+from ..models.user_model import User
+import pdb
 
-COLORS = {
-    "W": "White",
-    "U": "Blue",
-    "B": "Black",
-    "R": "Red",
-    "G": "Green",
-    "C": "Colorless"
-}
+# This will expect a JSON package of the data we care about from the FE after the user has already chosen the 'leader' they want from the data
 
-# todo: build this service as a POST which expects a specific card name from the FE. FE should utilize the
-  # auto-complete route to find and preview cards before clicking a 'save' button which sends the POST request to the backend with the name of the card to search for/save.
+# todo: Configure CSRF token so I can practice hitting the endpoints with Postman
 
-@api_view(["POST"])
-def create_card(request):
-  query = request.GET.get('query')
-  if query:
-    card_data = CardService.search_cards(query)
-    for data in card_data:
-      card = Card.objects.create(
-        name=data.get('name'),
-        mana_cost=data.get('mana_cost'),
-        cmc=data.get('cmc'),
-        type_line=data.get('type_line'),
-        rarity=data.get('rarity'),
-        cmdr_legal=data.get('legalities').get('commander'),
-        img=data.get('image_uris').get('normal'),
-        purchase_uris=data.get('purchase_uris').get('tcgplayer'),
-        created_at=datetime.now(),
-        updated_at=datetime.now()
-      )
+@api_view('POST')
+def create_mtg_card(request, user_id, deck_id):
+  try:
+    user = User.objects.get(pk=user_id)
+  except User.DoesNotExist:
+    return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+  
+  try:
+    deck = Deck.objects.get(pk=deck_id)
+  except Deck.DoesNotExist:
+    return Response({"error": "Deck not found"}, status=status.HTTP_404_NOT_FOUND)
+    
+  data = request.data
+  colors = data.get('colors', [])
+  color_values = process_colors(colors)
 
-      if len(data.get('colors_identity')) == 0:
-          colors = ["C"]
-      colors = data.get('colors_identity', [])
+  card_data = {
+    "name": data.get('name'),
+    "cmc": data.get('cmc'),
+    "mana_cost": data.get('mana_cost'),
+    "colors": ','.join(color_values),
+    "type_line": data.get('type_line'),
+    "rarity": data.get('rarity'),
+    "cmdr_legal": data.get('cmdr_legal'),
+    "img": data.get('img'),
+    "purchase_uris": data.get('purchase_uris'),
+  }
 
-      for color_abbreviation in colors:
-          color = Color.objects.filter(name=COLORS[color_abbreviation]).first()
-          if color:
-              card.colors.add(color)
-      card.save()
-
-    serializer = CardSerializer(card)
-
+  serializer = CardSerializer(data=card_data)
+  if serializer.is_valid():
+    card = serializer.save()
+    deck.deck_leader = card
+    deck.save()
     return Response(serializer.data, status=status.HTTP_201_CREATED)
-  else:
-    return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
+  return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
