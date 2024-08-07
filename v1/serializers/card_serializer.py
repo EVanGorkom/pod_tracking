@@ -1,10 +1,10 @@
 from rest_framework import serializers
 from ..models.card_model import Card
-from .color_serializer import ColorSerializer
+from ..enums.color_enum import MtgColor
 
 class CardSerializer(serializers.ModelSerializer):
-    colors = ColorSerializer(many=True, read_only=True)
+    colors = serializers.ChoiceField(choices=MtgColor.choices())
 
     class Meta:
         model = Card
-        fields = ['id', 'name', 'mana_cost', 'cmc', 'type_line', 'rarity', 'cmdr_legal', 'img', 'purchase_uris', 'created_at', 'updated_at', 'colors']
+        fields = ['id', 'name', 'deck', 'cmc', 'mana_cost', 'colors', 'type_line', 'rarity', 'cmdr_legal', 'img', 'purchase_uris', 'created_at', 'updated_at']
