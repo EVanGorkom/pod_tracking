@@ -4,7 +4,6 @@ from rest_framework.response import Response
 from rest_framework import status
 from ..models.user_model import User
 from ..models.deck_model import Deck
-from ..serializers.user_serializer import UserSerializer
 from ..serializers.deck_serializer import DeckSerializer
 
 @api_view(['GET', 'POST'])

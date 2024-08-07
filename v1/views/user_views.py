@@ -4,7 +4,6 @@ from rest_framework.response import Response
 from rest_framework import status
 from ..models.user_model import User
 from ..serializers.user_serializer import UserSerializer
-from datetime import datetime
 
 @api_view(['GET', 'POST'])
 def user_list(request):
