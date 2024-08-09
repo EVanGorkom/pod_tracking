@@ -19,8 +19,3 @@ class Card(models.Model):
     def __str__(self):
         return self.name
     
-    def set_colors(self, color_list): 
-        self.colors = ','.join([color.name for color in color_list])
-
-    def get_colors(self):
-        return [MtgColor[color] for color in self.colors.split(',') if color]
