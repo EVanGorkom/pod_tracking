@@ -6,6 +6,7 @@ from ..models.user_model import User
 from ..models.deck_model import Deck
 from ..serializers.deck_serializer import DeckSerializer
 
+# work on the post method. Postman is requiring fields, that we don't want to require or need to create a basic deck object (user is required fillable field when it should be inherited, colors is required when it should default, deck_type enum is not being handled)
 @api_view(['GET', 'POST'])
 def deck_list(request, user_id):
     try:
@@ -33,13 +34,8 @@ def create_deck(request):
 @api_view(['GET', 'PUT', 'DELETE'])
 def deck_details(request, user_id, deck_id):
     try:
-        user = user.objects.get(pk=user_id)
-    except user.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-    
-    try:
-        deck = deck.objects.get(pk=deck_id, user=user)
-    except deck.DoesNotExist:
+        deck = Deck.objects.get(pk=deck_id, user=user_id)
+    except Deck.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
     
     if request.method == 'GET':
