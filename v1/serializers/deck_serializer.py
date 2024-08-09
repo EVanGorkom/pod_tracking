@@ -7,4 +7,4 @@ class DeckSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Deck
-        fields = ['id', 'name', 'user', 'tcg', 'deck_type', 'colors', 'photo', 'wins', 'losses', 'created_at', 'updated_at']
+        fields = ['id', 'name', 'user', 'deck_leader', 'tcg', 'deck_type', 'colors', 'photo', 'wins', 'losses', 'created_at', 'updated_at']
