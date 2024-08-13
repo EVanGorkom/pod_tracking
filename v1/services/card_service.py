@@ -4,7 +4,6 @@ class CardService:
   base_url = 'https://api.scryfall.com/cards'
 
   def search_cards(name):
-    # url = base_url + '/cards/search'
     url = 'https://api.scryfall.com/cards/named?'
     params = {'fuzzy': name}
     response = requests.get(url, params=params)
@@ -13,3 +12,5 @@ class CardService:
       return [response.json()]
     else:
       return []
+    
+    # potentially create an autocomplete route service to a list of potential options
